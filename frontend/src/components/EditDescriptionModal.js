@@ -15,18 +15,18 @@ const EditDescriptionModal = ({
     productName: product.productName || productName || "",
     productDescription: product.productDescription || productDescription || "",
     unitPrice: product.unitPrice || unitPrice || 0,
-    category: product.category || category || "", // Fallback to category from props if not in product
+    category: product.category || category || "",
     image: product.image_path || "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    console.log("Category received in useEffect:", category); // This works because 'category' is passed in props
-    console.log("Product category:", category); // 'product.category' might be undefined
     setEditedProduct({
       productName: product.productName || productName || "",
       productDescription: product.productDescription || productDescription || "",
       unitPrice: product.unitPrice || unitPrice || 0,
-      category: product.category || category || "", // Fallback to 'category' if 'product.category' is undefined
+      category: product.category || category || "",
       image: product.image_path || "",
     });
   }, [product, productName, productDescription, unitPrice, category]);
@@ -46,7 +46,7 @@ const EditDescriptionModal = ({
       reader.onloadend = () => {
         setEditedProduct((prevState) => ({
           ...prevState,
-          image: reader.result, // Store the Base64 string of the image
+          image: reader.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -65,35 +65,32 @@ const EditDescriptionModal = ({
     }
 
     const updatedProduct = {
-      productName: product.productName,  // Current value, to be used as reference
-      productDescription: product.productDescription, // Current value, reference
-      category: category, // Current category
-      unitPrice: product.unitPrice,  // Current price
-      newProductName: editedProduct.productName.trim(),  // Trimmed input
-      newProductDescription: editedProduct.productDescription.trim(),  // Trimmed input
-      newCategory: editedProduct.category.trim(),  // Trimmed input
-      newUnitPrice: parseFloat(editedProduct.unitPrice),  // Parsed as number
-      newImage: editedProduct.image,  // Base64 encoded image
+      productName: product.productName,
+      productDescription: product.productDescription,
+      category: category,
+      unitPrice: product.unitPrice,
+      newProductName: editedProduct.productName.trim(),
+      newProductDescription: editedProduct.productDescription.trim(),
+      newCategory: editedProduct.category.trim(),
+      newUnitPrice: parseFloat(editedProduct.unitPrice),
+      newImage: editedProduct.image,
     };
 
-    console.log("Payload:", updatedProduct);
-
+    setLoading(true);
     try {
       const response = await axios.put(
         `/ims/products/update/name/description/size/category/image`,
         updatedProduct,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
       console.log("Server Response:", response.data);
-      onSave(updatedProduct); 
+      onSave(updatedProduct);
       onClose();
     } catch (error) {
       console.error("Error updating product:", error);
       alert("An error occurred while updating the product.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,7 +150,9 @@ const EditDescriptionModal = ({
               onChange={handleInputChange}
             />
           </label>
-          <button onClick={handleSave}>Save</button>
+          <button onClick={handleSave} disabled={loading}>
+            {loading ? "Saving..." : "Save"}
+          </button>
         </div>
       </div>
     </div>

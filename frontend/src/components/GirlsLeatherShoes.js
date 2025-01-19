@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import "./GirlsLeatherShoes.css"; // Create separate styles for Girl'sLeatherShoes
+import "./GirlsLeatherShoes.css";
 import AddProductForm from "./AddProductForm";
-import EditProductForm from "./EditProductForm"; 
+import EditProductForm from "./EditProductForm";
+import EditDescriptionModal from "./EditDescriptionModal";
 
 const GirlsLeatherShoes = () => {
+  // Similar logic as the Women's catalog, change category to "girls"
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [error, setError] = useState(null); // State for error handling
+  const [error, setError] = useState(null);
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+  const [isProductFormOpen, setIsProductFormOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -30,10 +34,28 @@ const GirlsLeatherShoes = () => {
     closeDeleteModal();
   };
 
-  const openEditProduct = (product) => setProductToEdit(product);
-  const closeEditProduct = () => setProductToEdit(null);
+  const openEditDescription = (product) => {
+    setProductToEdit({ product, category: "girls" });
+    setIsDescriptionModalOpen(true);
+    setIsProductFormOpen(false);
+  };
 
-  // Fetch products from the API when the component mounts
+  const openEditProduct = (product) => {
+    setProductToEdit({ product, category: "girls" });
+    setIsProductFormOpen(true);
+    setIsDescriptionModalOpen(false);
+  };
+
+  const closeEditProduct = () => {
+    setProductToEdit(null);
+    setIsProductFormOpen(false);
+  };
+
+  const closeEditDescription = () => {
+    setProductToEdit(null);
+    setIsDescriptionModalOpen(false);
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -42,51 +64,68 @@ const GirlsLeatherShoes = () => {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        setProducts(data); // Update state with the fetched products
+
+        const uniqueProducts = data.filter((product, index, self) => 
+          index === self.findIndex((p) => (
+            p.productName === product.productName &&
+            p.productDescription === product.productDescription &&
+            p.unitPrice === product.unitPrice
+          ))
+        );
+
+        setProducts(uniqueProducts);
       } catch (error) {
         console.error(error);
         setError("Could not fetch products. Please try again later.");
       }
     };
+
     fetchProducts();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  }, []);
 
   return (
     <div className="girls-catalog-products-container">
-      <h1 className="girls-catalog-header">Girl’s Leather Shoes</h1>
+      <h1 className="girls-catalog-header">Girls’ Leather Shoes</h1>
       <button className="girls-catalog-add-product-btn" onClick={openModal}>
         Add Product
       </button>
 
-      {/* AddProductForm Modal */}
       <AddProductForm
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={addProduct}
       />
 
-      {/* Error Handling UI */}
       {error && <div className="error-message">{error}</div>}
 
       <div className="girls-catalog-products-grid">
-        {/* Mapping through products to display in grid */}
         {products.map((product, index) => (
           <div key={index} className="girls-catalog-product-card">
             <img
-              src={product.image_path} // Assuming the API response includes image_path
+              src={product.image_path}
               alt={product.productName}
-              onClick={() => openEditProduct(product)} // Open the EditProductForm on click
+              onClick={() => openEditProduct(product)}
             />
             <div className="girls-catalog-product-info">
               <h3>{product.productName}</h3>
               <p>{product.productDescription}</p>
-              <p>Price: ${product.unitPrice}</p> {/* Assuming unitPrice is numeric */}
+              <p>Price: ${product.unitPrice}</p>
             </div>
+
             <div className="girls-catalog-product-actions">
+              <button
+                className="girls-catalog-edit-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditDescription(product);
+                }}
+              >
+                Edit
+              </button>
               <button
                 className="girls-catalog-delete-btn"
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent card click
+                  e.stopPropagation();
                   openDeleteModal(product);
                 }}
               >
@@ -97,15 +136,23 @@ const GirlsLeatherShoes = () => {
         ))}
       </div>
 
-      {/* EditProductForm Modal */}
-      {productToEdit && (
+      {isProductFormOpen && productToEdit && (
         <EditProductForm
-          product={productToEdit} // Pass the product to EditProductForm
-          onClose={closeEditProduct} // Close the form
+          product={productToEdit.product}
+          category={productToEdit.category}
+          onClose={closeEditProduct}
         />
       )}
 
-      {/* Delete Confirmation Modal */}
+      {isDescriptionModalOpen && productToEdit && (
+        <EditDescriptionModal
+          product={productToEdit.product}
+          category={productToEdit.category}
+          image={productToEdit.product.image_path}
+          onClose={closeEditDescription}
+        />
+      )}
+
       {isDeleteModalOpen && (
         <div className="girls-catalog-modal-overlay">
           <div className="girls-catalog-modal-content">
