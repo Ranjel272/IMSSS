@@ -12,7 +12,7 @@ const EditProductForm = ({ product, category, onClose }) => {
   const [isAddSizeModalOpen, setAddSizeModalOpen] = useState(false); // Add state for AddSizeModal visibility
   const [error, setError] = useState(null);
 
-  // Fetch sizes
+  // Fetch sizes based on category
   useEffect(() => {
     if (productData) {
       const fetchSize = async () => {
@@ -42,7 +42,7 @@ const EditProductForm = ({ product, category, onClose }) => {
     }
   }, [productData, category]);
 
-  // Fetch size variants
+  // Fetch size variants based on category
   useEffect(() => {
     if (productData) {
       const fetchSizeVariants = async () => {
@@ -209,8 +209,7 @@ const EditProductForm = ({ product, category, onClose }) => {
           productName={productData.productName}
           productDescription={productData.productDescription}
           unitPrice={productData.unitPrice}
-          category="men"  
-          image_path
+          category={category || 'women'} // Pass category dynamically
         />
       )}
     </div>

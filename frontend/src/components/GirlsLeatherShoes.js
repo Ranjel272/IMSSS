@@ -109,7 +109,7 @@ const GirlsLeatherShoes = () => {
             <div className="girls-catalog-product-info">
               <h3>{product.productName}</h3>
               <p>{product.productDescription}</p>
-              <p>Price: ${product.unitPrice}</p>
+              <p>Price: ₱{product.unitPrice}</p>
             </div>
 
             <div className="girls-catalog-product-actions">

@@ -1,26 +1,26 @@
 /* Container for the entire product section */
 .mens-catalog-products-container {
-  max-width: 100%;
-  padding: 20px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  max-width: 100%; /* Full screen width */
+  padding: 20px; /* Add padding around the edges */
+  margin: 0 auto; /* Center the container */
+  box-sizing: border-box; /* Include padding in calculations */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; /* Align contents to the left (buttons and products) */
 }
 
 /* Catalog header (Men’s Leather Shoes) */
 .mens-catalog-header {
-  text-align: center;
+  text-align: center; /* Center the header text */
   font-size: 2em;
   font-weight: bold;
-  width: 100%;
-  margin-bottom: 20px;
+  width: 100%; /* Make the header take full width */
+  margin-bottom: 20px; /* Space below the header */
 }
 
 /* Add Product Button */
 .mens-catalog-add-product-btn {
-  background-color: #ff0000;
+  background-color: #ff0000; /* red color for the button */
   color: white;
   border: none;
   border-radius: 5px;
@@ -28,19 +28,19 @@
   font-size: 1em;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 20px;
+  margin-top: 20px; /* Add some spacing from the products grid */
 }
 
 .mens-catalog-add-product-btn:hover {
-  background-color: #750101;
+  background-color: #0056b3;
 }
 
 /* Product Grid */
 .mens-catalog-products-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 15px;
-  margin-top: 20px;
+  grid-template-columns: repeat(6, 1fr); /* 6 cards per row */
+  gap: 15px; /* Space between cards */
+  margin-top: 20px; /* Adjust spacing for better positioning */
   width: 100%;
 }
 
@@ -55,14 +55,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 290px;
-  width: 100%;
+  height: 290px; /* Adjusted height for smaller cards */
+  width: 100%; /* Consistent width within grid */
 }
 
 /* Product Image */
 .mens-catalog-product-card img {
   width: 100%;
-  height: 120px;
+  height: 120px; /* Adjusted height for images */
   object-fit: cover;
 }
 
@@ -104,15 +104,6 @@
   font-size: 0.8em;
   cursor: pointer;
   transition: background-color 0.2s;
-}
-
-.mens-catalog-edit-btn{
-  background-color: #fe3835;
-  color: white;
-}
-
-.mens-catalog-edit-btn:hover {
-  background-color: #d92f2c;
 }
 
 /* Delete Button */

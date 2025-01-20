@@ -109,7 +109,7 @@ const BoysLeatherShoes = () => {
             <div className="boys-catalog-product-info">
               <h3>{product.productName}</h3>
               <p>{product.productDescription}</p>
-              <p>Price: ${product.unitPrice}</p>
+              <p>Price: ₱{product.unitPrice}</p>
             </div>
 
             <div className="boys-catalog-product-actions">
